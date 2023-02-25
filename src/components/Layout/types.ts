@@ -13,4 +13,5 @@ export type BurgerProps = {
 
 export type BurgerMenuProps = {
   navItems: NavItem[]
+  handleClick: (to: string) => (e: React.MouseEvent) => void
 } & React.HTMLProps<HTMLElement>

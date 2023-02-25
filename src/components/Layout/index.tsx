@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from "react"
+import React, { PropsWithChildren, useEffect, useState } from "react"
 import { NextRouter, useRouter } from "next/router"
 import Image from "next/image"
 import { NavItem } from "./types"
@@ -15,6 +15,7 @@ const NavLinks: NavItem[] = [
 const Layout = ({ children }: PropsWithChildren) => {
   const router: NextRouter = useRouter()
   const burgerMenuRef = React.useRef<HTMLInputElement>(null)
+  const burgerIconRef = React.useRef<HTMLInputElement>(null)
   const [showBurgerMenu, setShowBurgerMenu] = useState(false)
 
   const clickedBurger: React.MouseEventHandler<HTMLDivElement> = (e) => {
@@ -28,18 +29,50 @@ const Layout = ({ children }: PropsWithChildren) => {
     }
   }
 
+  const clickedBurgerItem = (to: string) => (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (showBurgerMenu) {
+      burgerMenuRef.current!.style.width = "0%"
+      setShowBurgerMenu(false)
+      router.push(to)
+    }
+  }
+
+  function useOutsideAlerter(ref: React.RefObject<HTMLInputElement>) {
+    useEffect(() => {
+      function handleClickOutside(e: MouseEvent) {
+        if (
+          showBurgerMenu &&
+          ref.current &&
+          !ref.current.contains(e.target as HTMLElement) &&
+          !burgerIconRef.current?.contains(e.target as HTMLElement)
+        ) {
+          ref.current!.style.width = "0%"
+          setShowBurgerMenu(false)
+        }
+      }
+      document.addEventListener("mousedown", handleClickOutside)
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside)
+      }
+    })
+  }
+  useOutsideAlerter(burgerMenuRef)
+
   return (
     <>
-      <header>
-        <Image src={pdpsi} alt={"Logo"} onClick={() => router.push("/")} />
-        <nav>
-          <NavItems navItems={NavLinks} />
-          <BurgerIcon handleClick={clickedBurger} />
-        </nav>
-      </header>
-      <main>{children}</main>
-      <footer>test</footer>
-      <BurgerMenu ref={burgerMenuRef} navItems={NavLinks} />
+      <div id="main">
+        <header>
+          <Image src={pdpsi} alt={"Logo"} onClick={() => router.push("/")} />
+          <nav>
+            <NavItems navItems={NavLinks} />
+            <BurgerIcon ref={burgerIconRef} handleClick={clickedBurger} />
+          </nav>
+        </header>
+        <main>{children}</main>
+        <footer>test</footer>
+      </div>
+      <BurgerMenu ref={burgerMenuRef} navItems={NavLinks} handleClick={clickedBurgerItem} />
     </>
   )
 }

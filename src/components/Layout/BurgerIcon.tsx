@@ -1,12 +1,12 @@
 import React from "react"
 import { BurgerProps } from "./types"
 
-export const BurgerIcon: React.FunctionComponent<BurgerProps> = ({ handleClick }) => {
+export const BurgerIcon = React.forwardRef<HTMLInputElement, BurgerProps>(({ handleClick }, ref) => {
   return (
-    <div className="BurgerIcon" onClick={handleClick}>
-      <div className="burger" />
+    <div ref={ref} className="BurgerIcon" onClick={handleClick}>
       <div className="burger" />
       <div className="burger" />
     </div>
   )
-}
+})
+BurgerIcon.displayName = "BurgerIcon"
