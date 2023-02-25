@@ -5,7 +5,6 @@ import { NavItem } from "./types"
 import { BurgerIcon } from "./BurgerIcon"
 import { NavItems } from "./NavItems"
 import { BurgerMenu } from "./BurgerMenu"
-import pdpsi from "public/pdpsi.png"
 
 const NavLinks: NavItem[] = [
   { name: "Home", to: "/" },
@@ -63,7 +62,7 @@ const Layout = ({ children }: PropsWithChildren) => {
     <>
       <div id="main">
         <header>
-          <Image src={pdpsi} alt={"Logo"} onClick={() => router.push("/")} />
+          <a onClick={() => router.push("/")}>Logo</a>
           <nav>
             <NavItems navItems={NavLinks} />
             <BurgerIcon ref={burgerIconRef} handleClick={clickedBurger} />
